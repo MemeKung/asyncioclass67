@@ -17,10 +17,19 @@ async def cook_curry():
     return f'Curry is ready in {cook_time} seconds'
 
 async def main():
-    tasks = [cook_rice(), cook_noodle(), cook_curry()]
-    done, _ = await asyncio.wait([asyncio.create_task(task) for task in tasks], return_when=asyncio.FIRST_COMPLETED)
+    tasks = [asyncio.create_task(cook_rice(), name="Rice"), asyncio.create_task(cook_noodle(), name="Noodle"), asyncio.create_task(cook_curry(), name="Curry")]
+    done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
+    
+    for task in tasks:
+        if not task.done():
+            await task
+        print(task.result())
+
+    print(f'Completed task: {len(done)}') 
 
     for task in done:
-        print(task.result())
+        print(f'\t- Finished cooking: {task.get_name()}')
+
+    print(f'Uncompleted task: {len(pending)}')
 
 asyncio.run(main())
