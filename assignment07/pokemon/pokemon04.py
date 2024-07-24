@@ -3,8 +3,8 @@ import asyncio
 import json
 from pathlib import Path
 
-pokemonapi_directory = './assignment07/pokemon/pokemonapi'
-pokemonmove_directory = './assignment07/pokemon/pokemonmove'
+pokemonapi_directory = 'asyncioclass67/assignment07/pokemon/pokemonapi'
+pokemonmove_directory = 'asyncioclass67/assignment07/pokemon/pokemonmove'
 
 async def main():
     pathlist = Path(pokemonapi_directory).glob('*.json')
