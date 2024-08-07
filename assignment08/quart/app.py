@@ -15,18 +15,13 @@ async def get_pokemon(client, url):
     pokemon = response.json()
     return pokemon
 
-
-
-
 async def get_pokemons():
     rand_list = [random.randint(1, 151) for _ in range(20)]
     async with httpx.AsyncClient() as client:
         tasks = [get_pokemon(client, f'https://pokeapi.co/api/v2/pokemon/{number}') for number in rand_list]
         pokemon_jsons = await asyncio.gather(*tasks)
-        
         pokemon_data = [Pokemon(pokemon_json) for pokemon_json in pokemon_jsons]
         return pokemon_data
-
 
 @app.route('/')
 async def index():
