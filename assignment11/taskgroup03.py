@@ -76,14 +76,27 @@ async def customer_generation(queue: Queue, customers: int):
 # Finally, we use the main method to initialize the queue, 
 # producer, and consumer, and start all concurrent tasks.
 async def main():
-    customer_queue = Queue(2)
+    CUSTOMER = 3
+    QUEUE = 2
+    CASHIERS = 3
+    customer_queue = Queue(QUEUE)
     customers_start_time = time.perf_counter()
-    customer_producer = asyncio.create_task(customer_generation(customer_queue, 3))
-    cashiers = [checkout_customer(customer_queue, i) for i in range(3)]
+    async with asyncio.TaskGroup() as group:
+        customer_group = group.create_task(customer_generation(customer_queue, CUSTOMER))
+        cashier_group = [group.create_task(checkout_customer(customer_queue, i)) for i in range(CASHIERS)]
 
-    await asyncio.gather(customer_producer, *cashiers)
-    print(f"The supermarket process finished "
-          f"{customer_producer.result()} customers "
-          f"in {round(time.perf_counter() - customers_start_time, ndigits=2)} secs")
+    print(20*'_')
+    for cg in cashier_group:
+        if cg.result():
+            cashiers = cg.result()
+            print(f"The Cashier_{cashiers["id"]}"
+                  f"take{cashiers['customer']} customers"
+                  f"total{round(cashiers['time'],ndigits=2)}secs.")
+
+    if customer_group.result():
+        print(f"The supermarket process finished "
+            f"{customer_group.result()} customers "
+            f"in {round(time.perf_counter() - customers_start_time, ndigits=2)} secs")
+        
 if __name__ == "__main__":
     asyncio.run(main())

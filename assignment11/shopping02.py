@@ -60,12 +60,12 @@ async def customer_generation(queue: Queue, number_of_customers: int):
 
 async def main():
     customer_queue = Queue()
-    customers_count = 3  
+    customers_count = 2  
     customers_start_time = time.perf_counter()
     cashier_totals = {0: 0, 1: 0, 2: 0}
 
     await customer_generation(customer_queue, customers_count)
-    cashiers = [checkout_customer(customer_queue, i, cashier_totals) for i in range(2)]
+    cashiers = [checkout_customer(customer_queue, i, cashier_totals) for i in range(3)]
 
     await asyncio.gather(*cashiers)
     print("\n--------------------------")
