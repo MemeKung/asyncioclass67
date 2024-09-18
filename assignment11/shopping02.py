@@ -71,7 +71,7 @@ async def main():
     print("\n--------------------------")
     for cashier, total_time in cashier_totals.items():
         if total_time > 0:
-            print(f"The Cashier_{cashier} took {total_time} secs.")
+            print(f"The Cashier_{cashier} took {round(total_time, ndigits=2)} secs.")
     
     print(f"\nThe supermarket process finished in {round(time.perf_counter() - customers_start_time, 2)} secs")
 
